@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Drinking</title>
-    <script type="application/javascript" src="{% static 'bootstrap/js/jquery-3.6.0.min.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/jquery.cookie.min.js' %}"></script>
 
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <script type="application/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 </head>
 <body>
-
-Hello
-{{ time }}
+<div class="timer">{{ time }}</div>
 <table class="table table-striped table-sm">
     <tr><td>#</td><td>接了一杯,开始喝水</td><td>喝完了这杯</td><td>num</td><td>今日第几杯</td></tr>
     {% for item in water %}
@@ -28,13 +27,37 @@ Hello
 <form action="#" method="post" name="water">
     {% csrf_token %}
     <input class="start_drink" type="button" name="water_start" value="去接了一杯水">
-    <input type="submit" name="water_end" value="喝完了这杯水">
+    <input class="end_drink" type="button" name="water_end" value="喝完了这杯水">
 </form>
 <script type="text/javascript">
+    setInterval(function () {
+        $('.timer').text(Date());
+    }, 1000);
     $('.start_drink').on('click', function () {
-        $.ajax(
-            // 下班了，待完；
-        )
+        const csrftoken = $.cookie('csrftoken');
+        $.ajax({
+            headers: {'X-CSRFToken': csrftoken},
+            url: "/water_start",
+            type: 'POST',
+            data: {"water_start": this.value},
+            dataType: "json",
+            success: function (resData) {
+                location.reload();
+            }
+        })
+    })
+    $(".end_drink").on("click", function () {
+        $.ajax({
+            headers: {'X-CSRFToken': $.cookie('csrftoken')},
+            url: "/water_end",
+            type: 'POST',
+            data: {"water_end": this.value},
+            dataType: "json",
+            success: function (resData) {
+                location.reload();
+            }
+        })
+
     })
 </script>
 </body>

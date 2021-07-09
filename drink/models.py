@@ -3,9 +3,13 @@ from django.db import models
 # Create your models here.
 
 class WaterInfo(models.Model):
+    status = (
+        ()
+    )
     num = models.SmallIntegerField(verbose_name="每次一杯水",default=1)
     start_time = models.DateTimeField(verbose_name="开始喝水", auto_now_add=True)
-    end_time = models.DateTimeField(verbose_name="喝完一杯水")
+    end_time = models.DateTimeField(verbose_name="喝完一杯水", null=True)
+    status = models.SmallIntegerField(choices=status)
     water = models.IntegerField(verbose_name='今日第几杯水', default=1)
 
 class WaterPing(models.Model):

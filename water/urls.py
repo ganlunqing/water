@@ -19,4 +19,6 @@ from drink import views
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', views.index),
+    path(r'water_start', views.water_start),
+    path(r'water_end', views.water_end)
 ]
